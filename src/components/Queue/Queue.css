@@ -2,6 +2,7 @@
   padding: 20px;
   background-color: #fafafa;
   min-height: 100%;
+  overflow-x: hidden;
 }
 
 .queue-header {

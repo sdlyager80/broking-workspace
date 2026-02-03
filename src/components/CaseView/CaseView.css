@@ -1,6 +1,8 @@
 .case-view {
   background: #fafafa;
   min-height: 100%;
+  overflow-x: hidden;
+  max-width: 100%;
 }
 
 /* Header strip */
@@ -69,6 +71,7 @@
 /* Tab content */
 .tab-content {
   padding: 20px 24px;
+  overflow-x: hidden;
 }
 
 /* ─── Ingestion Banner ─── */
@@ -92,8 +95,9 @@
 /* ─── Interaction Record Layout (3-column) ─── */
 .interaction-layout {
   display: grid;
-  grid-template-columns: 200px 1fr 200px;
+  grid-template-columns: 200px minmax(0, 1fr) 200px;
   gap: 20px;
+  overflow: hidden;
 }
 
 /* Left sidebar */
@@ -123,6 +127,9 @@
   font-weight: 400;
   padding: 4px 0;
   border-bottom: 1px solid #e0e0e0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .sidebar-link {
@@ -131,6 +138,10 @@
   text-decoration: none;
   padding: 4px 0;
   border-bottom: 1px solid #e0e0e0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  display: block;
 }
 
 .sidebar-link:hover {
@@ -142,6 +153,8 @@
   display: flex;
   flex-direction: column;
   gap: 16px;
+  min-width: 0;
+  overflow: hidden;
 }
 
 .interaction-section {
@@ -161,6 +174,8 @@
   border: 1px solid #d4d4d4;
   border-radius: 4px;
   padding: 10px 14px;
+  overflow: hidden;
+  word-break: break-word;
 }
 
 .section-box-tall {
@@ -321,6 +336,7 @@
   overflow: hidden;
   border: 1px solid #e8e8e8;
   font-size: 13px;
+  table-layout: fixed;
 }
 
 .data-table thead tr {
@@ -339,6 +355,9 @@
 .data-table td {
   padding: 10px 12px;
   border-bottom: 1px solid #f0f0f0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .data-table tbody tr:hover {

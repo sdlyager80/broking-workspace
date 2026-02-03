@@ -116,9 +116,9 @@ function App() {
       }
     >
       <DxcApplicationLayout.Main>
-        <div style={{ display: 'flex', height: 'calc(100vh - 64px)' }}>
+        <div style={{ display: 'flex', height: 'calc(100vh - 64px)', overflow: 'hidden' }}>
           {/* Queue List - Left Panel */}
-          <div style={{ width: selectedCase ? '420px' : '100%', minWidth: selectedCase ? '420px' : 'auto', borderRight: selectedCase ? '1px solid #e0e0e0' : 'none', overflow: 'auto', transition: 'width 0.2s ease' }}>
+          <div style={{ width: selectedCase ? '420px' : '100%', minWidth: selectedCase ? '420px' : 'auto', maxWidth: selectedCase ? '420px' : 'none', borderRight: selectedCase ? '1px solid #e0e0e0' : 'none', overflowY: 'auto', overflowX: 'hidden', transition: 'width 0.2s ease', flexShrink: 0 }}>
             <Queue
               onCaseSelect={handleCaseSelect}
               selectedCaseId={selectedCase?.id}
@@ -128,7 +128,7 @@ function App() {
 
           {/* Case View - Right Panel */}
           {selectedCase && (
-            <div style={{ flex: 1, overflow: 'auto' }}>
+            <div style={{ flex: 1, minWidth: 0, overflowY: 'auto', overflowX: 'hidden' }}>
               <CaseView
                 caseData={selectedCase}
                 onClose={() => setSelectedCase(null)}
