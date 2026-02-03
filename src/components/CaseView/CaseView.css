@@ -71,7 +71,192 @@
   padding: 20px 24px;
 }
 
-/* Info card */
+/* ─── Ingestion Banner ─── */
+.ingestion-banner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 20px;
+  border-radius: 6px;
+  margin-bottom: 16px;
+}
+
+.ingestion-success {
+  background: #24A148;
+}
+
+.ingestion-pending {
+  background: #FF6B00;
+}
+
+/* ─── Interaction Record Layout (3-column) ─── */
+.interaction-layout {
+  display: grid;
+  grid-template-columns: 200px 1fr 200px;
+  gap: 20px;
+}
+
+/* Left sidebar */
+.interaction-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.sidebar-field {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.sidebar-label {
+  font-size: 11px;
+  color: #8B6914;
+  font-weight: 600;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.sidebar-value {
+  font-size: 13px;
+  color: #333;
+  font-weight: 400;
+  padding: 4px 0;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.sidebar-link {
+  font-size: 12px;
+  color: #0095FF;
+  text-decoration: none;
+  padding: 4px 0;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.sidebar-link:hover {
+  text-decoration: underline;
+}
+
+/* Main content */
+.interaction-main {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.interaction-section {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.section-label {
+  font-size: 12px;
+  color: #8B6914;
+  font-weight: 600;
+}
+
+.section-box {
+  background: #ffffff;
+  border: 1px solid #d4d4d4;
+  border-radius: 4px;
+  padding: 10px 14px;
+}
+
+.section-box-tall {
+  min-height: 120px;
+}
+
+/* Documents strip */
+.documents-strip {
+  display: flex;
+  gap: 12px;
+  margin-top: 10px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+}
+
+.doc-icon-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 6px;
+  min-width: 80px;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background 0.15s;
+}
+
+.doc-icon-card:hover {
+  background: #f0f0f0;
+}
+
+.doc-icon-label {
+  font-size: 10px;
+  color: #555;
+  text-align: center;
+  max-width: 80px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Notes */
+.notes-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  border: 1px solid #d4d4d4;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.note-entry {
+  padding: 8px 12px;
+  background: #ffffcc;
+  border-bottom: 1px solid #e8e0a0;
+}
+
+.note-entry:last-child {
+  border-bottom: none;
+}
+
+.note-entry-input {
+  background: #ffffff;
+  border-top: 1px solid #d4d4d4;
+}
+
+.note-textarea {
+  width: 100%;
+  border: none;
+  outline: none;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 13px;
+  resize: vertical;
+  min-height: 36px;
+  padding: 4px 0;
+}
+
+/* MEA sidebar */
+.mea-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 12px;
+  background: #f8f9fa;
+  border-radius: 6px;
+  border: 1px solid #e8e8e8;
+  height: fit-content;
+}
+
+.mea-field {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+/* ─── Info card (shared across tabs) ─── */
 .info-card {
   background: #ffffff;
   border: 1px solid #e8e8e8;
@@ -79,7 +264,6 @@
   padding: 16px 20px;
 }
 
-/* Info grid */
 .info-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -97,7 +281,7 @@
   grid-column: span 3;
 }
 
-/* Data table */
+/* ─── Data table ─── */
 .data-table {
   width: 100%;
   border-collapse: collapse;

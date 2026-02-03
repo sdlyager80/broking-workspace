@@ -1,10 +1,11 @@
 import { useState } from 'react';
-import { DxcFlex, DxcTypography, DxcHeading, DxcButton, DxcTabs } from '@dxc-technology/halstack-react';
+import { DxcFlex, DxcTypography, DxcHeading, DxcButton, DxcTabs, DxcTextarea } from '@dxc-technology/halstack-react';
 import { getSlaStatusColor, formatDateTime } from '../../data/mockData';
 import './CaseView.css';
 
 function CaseView({ caseData, onClose }) {
   const [activeTab, setActiveTab] = useState(0);
+  const [userNote, setUserNote] = useState('');
 
   const c = caseData;
 
@@ -29,30 +30,144 @@ function CaseView({ caseData, onClose }) {
     }
   };
 
-  // Tab 1: Overview
+  // ─── Tab 1: Overview (Interaction Record layout) ───
   const renderOverview = () => (
     <div className="tab-content">
-      <div className="info-grid">
-        <InfoField label="Case / Submission reference" value={c.id} />
-        <InfoField label="Channel" value={c.channel} />
-        <InfoField label="Processing stage" value={c.processingStage} />
+      {/* Ingestion status banner */}
+      <div className={`ingestion-banner ${c.ingestionStatus === 'Completed' ? 'ingestion-success' : 'ingestion-pending'}`}>
+        <DxcTypography fontWeight="font-weight-bold" color="#ffffff">
+          SUBMISSION INTAKE {c.ingestionStatus === 'Completed' ? '\u2013 SUCCESSFULLY INGESTED' : '\u2013 INGESTION IN PROGRESS'}
+        </DxcTypography>
+        <DxcFlex gap="var(--spacing-gap-s)">
+          <DxcButton label="View Full Record" mode="secondary" onClick={() => {}} />
+          <DxcButton label="View Case" mode="secondary" onClick={() => {}} />
+        </DxcFlex>
       </div>
-      <div className="info-grid">
-        <InfoField label="Source email subject" value={c.sourceEmailSubject} wide />
-      </div>
-      <div className="info-grid">
-        <InfoField label="Source email sender" value={c.sourceEmailSender} />
-        <InfoField label="Attachments (count)" value={String(c.attachmentCount)} />
-      </div>
-      <div className="info-grid">
-        <InfoField label="MEA case reference" value={c.meaCaseRef} />
-        <InfoField label="MEA case link" value={c.meaCaseLink} isLink />
-        <InfoField label="DMS library address" value={c.dmsLibraryAddress} />
+
+      <div className="interaction-layout">
+        {/* Left sidebar - Interaction Record fields */}
+        <div className="interaction-sidebar">
+          <SidebarField label="Interaction Record ID" value={c.interactionRecordId} />
+          <SidebarField label="Record Status" value={c.recordStatus} hasIcon />
+          <SidebarField label="Contact ID" value={c.contactId} isLink />
+          <SidebarField label="Broker" value={c.broker} hasIcon />
+          <SidebarField label="Stage" value={c.stage} hasIcon />
+          <div className="sidebar-field">
+            <span className="sidebar-label">Documents Ingested</span>
+            <DxcFlex gap="var(--spacing-gap-s)" alignItems="center">
+              <span className="sidebar-value">{c.documentsIngested.ingested ? 'Yes' : 'No'}</span>
+              <span className="sidebar-value">{c.documentsIngested.count}</span>
+            </DxcFlex>
+          </div>
+          <SidebarField label="Status" value={c.ingestionStatus} hasIcon />
+          <SidebarField label="Channel" value={c.channel} hasIcon />
+        </div>
+
+        {/* Main content area */}
+        <div className="interaction-main">
+          {/* Short Description */}
+          <div className="interaction-section">
+            <span className="section-label">Short Description</span>
+            <div className="section-box">
+              <DxcTypography fontStyle="italic" color="var(--color-fg-neutral-stronger)">
+                {c.shortDescription}
+              </DxcTypography>
+            </div>
+          </div>
+
+          {/* Work Notes */}
+          <div className="interaction-section">
+            <span className="section-label">Work Notes</span>
+            <div className="section-box section-box-tall">
+              <DxcTypography fontStyle="italic" color="var(--color-fg-neutral-stronger)">
+                {c.workNotes}
+              </DxcTypography>
+            </div>
+          </div>
+
+          {/* Submission Intake Documents */}
+          <div className="interaction-section">
+            <span className="section-label">Submission Intake Documents</span>
+            <div className="section-box">
+              <DxcTypography fontSize="font-scale-01" fontStyle="italic" color="var(--color-fg-neutral-stronger)">
+                This is the files which have been ingested from the email, including a copy of the email
+              </DxcTypography>
+              <div className="documents-strip">
+                {c.documents.map((doc, i) => (
+                  <div key={i} className="doc-icon-card" title={doc.name}>
+                    <span className="material-icons" style={{ fontSize: '32px', color: doc.isEmail ? '#0095FF' : '#555' }}>
+                      {doc.isEmail ? 'email' : 'description'}
+                    </span>
+                    <span className="doc-icon-label">{doc.name.length > 18 ? doc.name.substring(0, 18) + '...' : doc.name}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Add Notes to record */}
+          <div className="interaction-section">
+            <DxcFlex justifyContent="space-between" alignItems="center">
+              <span className="section-label">Add Notes to record</span>
+              <DxcButton label="UPDATE RECORD" mode="primary" onClick={() => {}} />
+            </DxcFlex>
+            <div className="notes-list">
+              {c.notes.map((note, i) => (
+                <div key={i} className="note-entry">
+                  <DxcTypography fontSize="font-scale-01">
+                    <strong>{note.source} WROTE:</strong> {note.text || ''}
+                  </DxcTypography>
+                </div>
+              ))}
+              <div className="note-entry note-entry-input">
+                <DxcTypography fontSize="font-scale-01"><strong>USER_WROTE:</strong></DxcTypography>
+                <textarea
+                  className="note-textarea"
+                  value={userNote}
+                  onChange={(e) => setUserNote(e.target.value)}
+                  placeholder="Add a note..."
+                  rows={2}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Right sidebar - MEA Classification */}
+        <div className="mea-sidebar">
+          <DxcTypography fontSize="font-scale-01" color="#0095FF" fontWeight="font-weight-semibold">
+            MEA will return
+          </DxcTypography>
+          <div className="mea-field">
+            <DxcTypography fontSize="font-scale-01" color="var(--color-fg-neutral-stronger)">What &ldquo;thing it is&rdquo;</DxcTypography>
+            <DxcTypography fontWeight="font-weight-semibold">
+              {c.meaClassification.documentType || '\u2014'}
+            </DxcTypography>
+          </div>
+          <div className="mea-field">
+            <DxcTypography fontSize="font-scale-01" color="var(--color-fg-neutral-stronger)">Confidence Score</DxcTypography>
+            <DxcTypography fontWeight="font-weight-semibold">
+              {c.meaClassification.confidenceScore ? `${c.meaClassification.confidenceScore}%` : '\u2014'}
+            </DxcTypography>
+          </div>
+          <div className="mea-field">
+            <DxcTypography fontSize="font-scale-01" color="var(--color-fg-neutral-stronger)">&ldquo;number of attachments&rdquo;</DxcTypography>
+            <DxcTypography fontWeight="font-weight-semibold">
+              {c.meaClassification.attachmentCount}
+            </DxcTypography>
+          </div>
+          <div className="mea-field">
+            <DxcTypography fontSize="font-scale-01" color="var(--color-fg-neutral-stronger)">&ldquo;set of messages&rdquo;</DxcTypography>
+            {c.meaClassification.messages.map((msg, i) => (
+              <DxcTypography key={i} fontSize="font-scale-01">{msg}</DxcTypography>
+            ))}
+          </div>
+        </div>
       </div>
     </div>
   );
 
-  // Tab 2: Documents
+  // ─── Tab 2: Documents ───
   const renderDocuments = () => (
     <div className="tab-content">
       <DxcFlex direction="column" gap="var(--spacing-gap-s)">
@@ -76,7 +191,9 @@ function CaseView({ caseData, onClose }) {
               <tr key={i}>
                 <td>
                   <DxcFlex gap="var(--spacing-gap-xs)" alignItems="center">
-                    <span className="material-icons" style={{ fontSize: '16px', color: '#0095FF' }}>description</span>
+                    <span className="material-icons" style={{ fontSize: '16px', color: doc.isEmail ? '#0095FF' : '#555' }}>
+                      {doc.isEmail ? 'email' : 'description'}
+                    </span>
                     {doc.name}
                   </DxcFlex>
                 </td>
@@ -102,7 +219,7 @@ function CaseView({ caseData, onClose }) {
     </div>
   );
 
-  // Tab 3: Timeline
+  // ─── Tab 3: Timeline ───
   const renderTimeline = () => (
     <div className="tab-content">
       <table className="data-table">
@@ -148,7 +265,7 @@ function CaseView({ caseData, onClose }) {
     </div>
   );
 
-  // Tab 4: Classification
+  // ─── Tab 4: Classification ───
   const renderClassification = () => (
     <div className="tab-content">
       <div className="info-card">
@@ -167,7 +284,7 @@ function CaseView({ caseData, onClose }) {
     </div>
   );
 
-  // Tab 5: Integrations
+  // ─── Tab 5: Integrations ───
   const renderIntegrations = () => (
     <div className="tab-content">
       <DxcFlex direction="column" gap="var(--spacing-gap-m)">
@@ -204,7 +321,7 @@ function CaseView({ caseData, onClose }) {
     </div>
   );
 
-  // Tab 6: Admin
+  // ─── Tab 6: Admin ───
   const renderAdmin = () => (
     <div className="tab-content">
       <div className="info-card">
@@ -255,7 +372,7 @@ function CaseView({ caseData, onClose }) {
     }
   };
 
-  // Progress bar width
+  // Progress bar
   const progressStages = ['Ingestion', 'Classification', 'Validation', 'Fulfilment', 'Processing', 'Complete'];
   const currentStageIdx = progressStages.indexOf(c.processingStage);
   const progressPct = currentStageIdx >= 0 ? ((currentStageIdx + 1) / progressStages.length) * 100 : 10;
@@ -325,7 +442,26 @@ function CaseView({ caseData, onClose }) {
   );
 }
 
-// Reusable info field component
+// Reusable sidebar field
+function SidebarField({ label, value, hasIcon, isLink }) {
+  return (
+    <div className="sidebar-field">
+      <span className="sidebar-label">{label}</span>
+      <DxcFlex gap="var(--spacing-gap-xs)" alignItems="center">
+        {isLink ? (
+          <a href={`mailto:${value}`} className="sidebar-link">{value}</a>
+        ) : (
+          <span className="sidebar-value">{value}</span>
+        )}
+        {hasIcon && (
+          <span className="material-icons" style={{ fontSize: '14px', color: '#999', cursor: 'pointer' }}>lock</span>
+        )}
+      </DxcFlex>
+    </div>
+  );
+}
+
+// Reusable info field
 function InfoField({ label, value, isLink, wide, children }) {
   return (
     <div className={`info-field ${wide ? 'info-field-wide' : ''}`}>
