@@ -6,6 +6,7 @@ import './CaseView.css';
 function CaseView({ caseData, onClose }) {
   const [activeTab, setActiveTab] = useState(0);
   const [userNote, setUserNote] = useState('');
+  const [workNotesText, setWorkNotesText] = useState(caseData.workNotes || '');
 
   const c = caseData;
 
@@ -65,7 +66,7 @@ function CaseView({ caseData, onClose }) {
 
         {/* Main content area */}
         <div className="interaction-main">
-          {/* Short Description */}
+          {/* Short Description (= email subject) */}
           <div className="interaction-section">
             <span className="section-label">Short Description</span>
             <div className="section-box">
@@ -75,13 +76,25 @@ function CaseView({ caseData, onClose }) {
             </div>
           </div>
 
-          {/* Work Notes */}
+          {/* Email Body (the ingested email content) */}
+          <div className="interaction-section">
+            <span className="section-label">Email Body</span>
+            <div className="section-box email-body-box">
+              <pre className="email-body-text">{c.emailBody}</pre>
+            </div>
+          </div>
+
+          {/* Work Notes (editable area for user notes) */}
           <div className="interaction-section">
             <span className="section-label">Work Notes</span>
             <div className="section-box section-box-tall">
-              <DxcTypography fontStyle="italic" color="var(--color-fg-neutral-stronger)">
-                {c.workNotes}
-              </DxcTypography>
+              <textarea
+                className="worknotes-textarea"
+                value={workNotesText}
+                onChange={(e) => setWorkNotesText(e.target.value)}
+                placeholder="Add work notes here..."
+                rows={4}
+              />
             </div>
           </div>
 
@@ -90,7 +103,7 @@ function CaseView({ caseData, onClose }) {
             <span className="section-label">Submission Intake Documents</span>
             <div className="section-box">
               <DxcTypography fontSize="font-scale-01" fontStyle="italic" color="var(--color-fg-neutral-stronger)">
-                This is the files which have been ingested from the email, including a copy of the email
+                These are the files which have been ingested from the email, including a copy of the email
               </DxcTypography>
               <div className="documents-strip">
                 {c.documents.map((doc, i) => (
